@@ -1,15 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { InferResponseType } from "hono";
+import { InferRequestType, InferResponseType } from "hono";
 import { toast } from "sonner";
 
 import { client } from "@/lib/hono";
 
-type ResponseType = InferResponseType<
-  typeof client.api.accounts.$post
->;
-type ResponseType = InferResponseType<
-  typeof client.api.accounts.$post
->["json"];
+type ResponseType = InferResponseType<typeof client.api.accounts.$post>;
+type RequestType = InferRequestType<typeof client.api.accounts.$post>["json"];
 
 export const useCreateAccount = () => {
   const queryClient = useQueryClient();
@@ -25,7 +21,7 @@ export const useCreateAccount = () => {
       queryClient.invalidateQueries({ queryKey: ["accounts"] });
     },
     onError: () => {
-      toast.error("Failed to delete account.");
+      toast.error("Failed to create account.");
     },
   });
 
