@@ -1,16 +1,16 @@
-CREATE TABLE "accounts" (
+CREATE TABLE IF NOT EXISTS "accounts" (
 	"id" text PRIMARY KEY NOT NULL,
 	"name" text NOT NULL,
 	"user_id" text NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "categories" (
+CREATE TABLE IF NOT EXISTS "categories" (
 	"id" text PRIMARY KEY NOT NULL,
 	"name" text NOT NULL,
 	"user_id" text NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "transactions" (
+CREATE TABLE IF NOT EXISTS "transactions" (
 	"id" text PRIMARY KEY NOT NULL,
 	"amount" integer NOT NULL,
 	"payee" text NOT NULL,
