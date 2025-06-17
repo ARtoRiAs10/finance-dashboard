@@ -11,7 +11,7 @@ type RequestType = InferRequestType<
   (typeof client.api.transactions)[":id"]["$patch"]
 >["json"];
 
-export const useEditCategory = (id?: string) => {
+export const useEditTransaction = (id?: string) => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
@@ -24,7 +24,7 @@ export const useEditCategory = (id?: string) => {
       return await response.json();
     },
     onSuccess: () => {
-      toast.success("Category updated.");
+      toast.success("Transaction updated.");
       queryClient.invalidateQueries({ queryKey: ["transaction", { id }] });
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       queryClient.invalidateQueries({ queryKey: ["summary"] });

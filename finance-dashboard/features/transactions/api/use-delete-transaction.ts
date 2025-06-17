@@ -8,7 +8,7 @@ type ResponseType = InferResponseType<
   (typeof client.api.transactions)[":id"]["$delete"]
 >;
 
-export const useDeleteCategory = (id?: string) => {
+export const useDeleteTransaction = (id?: string) => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<ResponseType, Error>({
@@ -20,7 +20,7 @@ export const useDeleteCategory = (id?: string) => {
       return await response.json();
     },
     onSuccess: () => {
-      toast.success("Category deleted.");
+      toast.success("Transaction deleted.");
       queryClient.invalidateQueries({ queryKey: ["transaction", { id }] });
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       queryClient.invalidateQueries({ queryKey: ["summary"] });
