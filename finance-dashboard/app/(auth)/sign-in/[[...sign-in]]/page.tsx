@@ -1,10 +1,8 @@
-"use client";
-
-import { SignIn } from "@clerk/nextjs";
+import { SignIn, ClerkLoaded, ClerkLoading } from "@clerk/nextjs";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 
-export default function SignInPage() {
+const SignInPage = () => {
   return (
     <div className="grid min-h-screen grid-cols-1 lg:grid-cols-2">
       <div className="h-full flex-col items-center justify-center px-4 lg:flex">
@@ -16,7 +14,13 @@ export default function SignInPage() {
         </div>
 
         <div className="mt-8 flex items-center justify-center">
-          <SignIn path="/sign-in" />
+          <ClerkLoaded>
+            <SignIn path="/sign-in" />
+          </ClerkLoaded>
+
+          <ClerkLoading>
+            <Loader2 className="animate-spin text-muted-foreground" />
+          </ClerkLoading>
         </div>
       </div>
 
@@ -25,4 +29,6 @@ export default function SignInPage() {
       </div>
     </div>
   );
-}
+};
+
+export default SignInPage;
