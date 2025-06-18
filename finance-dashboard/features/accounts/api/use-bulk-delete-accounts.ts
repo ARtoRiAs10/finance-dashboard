@@ -20,6 +20,7 @@ export const useBulkDeleteAccounts = () => {
         json,
       });
       return await response.json();
+      console.log(response);
     },
     onSuccess: () => {
       toast.success("Account(s) deleted.");

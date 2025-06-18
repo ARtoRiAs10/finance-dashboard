@@ -15,6 +15,7 @@ export const useCreateAccount = () => {
       const response = await client.api.accounts.$post({ json });
 
       return await response.json();
+      console.log("Create accounts",response);
     },
     onSuccess: () => {
       toast.success("Account created.");

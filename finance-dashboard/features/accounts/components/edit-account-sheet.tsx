@@ -32,7 +32,9 @@ export const EditAccountSheet = () => {
   );
 
   const accountQuery = useGetAccount(id);
+  console.log(accountQuery)
   const editMutation = useEditAccount(id);
+  console.log(editMutation)
   const deleteMutation = useDeleteAccount(id);
 
   const isPending = editMutation.isPending || deleteMutation.isPending;
