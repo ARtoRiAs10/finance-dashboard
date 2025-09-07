@@ -60,12 +60,16 @@ const TransactionsPage = () => {
       return toast.error("Please select an account to continue.");
     }
 
-    const data = values.map((value) => ({
-      ...value,
-      accountId: accountId as string,
-    }));
+    const transactions = values.map((value) => ({
+    accountId: accountId as string,
+    amount: value.amount,
+    categoryId: value.categoryId || "uncategorized", // must be string
+    date: value.date.toISOString(),                  // convert Date -> string
+    description: value.payee,                        // map payee -> description
+  }));
 
-    createTransactions.mutate(data, {
+
+    createTransactions.mutate({transactions }, {
       onSuccess: () => {
         onCancelImport();
       },
