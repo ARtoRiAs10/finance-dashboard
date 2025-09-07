@@ -15,16 +15,17 @@ const app = new Hono().basePath("/api");
 
 // ✅ CORS middleware: allow all origins
 app.use("*", cors({
-  origin: (origin) => {
-    if (!origin) return "*"; // server-to-server calls
-    if (origin.endsWith(".vercel.app")) return origin; // allow any vercel frontend
-    if (origin === "http://localhost:3000") return origin; // local dev
-    return null; // block others
-  },
+  origin: [
+    "http://localhost:3000",
+    "https://*.vercel.app", // allow all vercel app frontends
+    "https://*.app.github.dev", 
+    process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
+  ],
   allowHeaders: ["Content-Type", "Authorization"],
   allowMethods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
   credentials: true,
 }));
+
 
 
 
