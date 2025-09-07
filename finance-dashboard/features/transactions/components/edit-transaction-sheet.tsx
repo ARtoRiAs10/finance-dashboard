@@ -11,7 +11,7 @@ import {
 import { insertTransactionSchema } from "@/db/schema";
 import { useCreateAccount } from "@/features/accounts/api/use-create-account";
 import { useGetAccounts } from "@/features/accounts/api/use-get-accounts";
-import { useCreateCategory } from "@/features/categories/api/use-create-category";
+import  useCreateCategory  from "@/features/categories/api/use-create-category";
 import { useGetCategories } from "@/features/categories/api/use-get-categories";
 import { useDeleteTransaction } from "@/features/transactions/api/use-delete-transaction";
 import { useEditTransaction } from "@/features/transactions/api/use-edit-transaction";
@@ -39,14 +39,14 @@ export const EditTransactionSheet = () => {
 
   const categoryMutation = useCreateCategory();
   const categoryQuery = useGetCategories();
-  const categoryOptions = (categoryQuery.data ?? []).map((category) => ({
+  const categoryOptions = (categoryQuery.data ?? []).map((category: any) => ({
     label: category.name,
     value: category.id,
   }));
 
   const accountMutation = useCreateAccount();
   const accountQuery = useGetAccounts();
-  const accountOptions = (accountQuery.data ?? []).map((account) => ({
+  const accountOptions = (accountQuery.data ?? []).map((account:any) => ({
     label: account.name,
     value: account.id,
   }));

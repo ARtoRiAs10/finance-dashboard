@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useGetAccounts } from "@/features/accounts/api/use-get-accounts";
-import { useGetSummary } from "@/features/summary/api/use-get-summary";
+import {useGetSummary} from "@/features/summary/api/use-get-summary";
 
 export const AccountFilter = () => {
   const pathname = usePathname();
@@ -58,7 +58,7 @@ export const AccountFilter = () => {
       <SelectContent>
         <SelectItem value="all">All accounts</SelectItem>
 
-        {accounts?.map((account) => (
+        {accounts?.map((account:any) => (
           <SelectItem key={account.id} value={account.id}>
             {account.name}
           </SelectItem>

@@ -1,20 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { client } from "@/lib/hono";
-
 export const useGetCategory = (id?: string) => {
   const query = useQuery({
-    enabled: !!id,
+    enabled: !!id, // only fetch if id is provided
     queryKey: ["category", { id }],
     queryFn: async () => {
-      const response = await client.api.categories[":id"].$get({
-        param: { id },
-      });
+      if (!id) throw new Error("Category ID is required.");
 
-      if (!response.ok) throw new Error("Failed to fetch category.");
+      const res = await fetch(`/api/categories/${encodeURIComponent(id)}`);
 
-      const { data } = await response.json();
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`Failed to fetch category: ${text}`);
+      }
 
+      const { data } = await res.json();
       return data;
     },
   });

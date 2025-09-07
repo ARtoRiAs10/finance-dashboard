@@ -1,23 +1,23 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { InferResponseType } from "hono";
 import { toast } from "sonner";
-
-import { client } from "@/lib/hono";
-
-type ResponseType = InferResponseType<
-  (typeof client.api.categories)[":id"]["$delete"]
->;
 
 export const useDeleteCategory = (id?: string) => {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation<ResponseType, Error>({
+  const mutation = useMutation({
     mutationFn: async () => {
-      const response = await client.api.categories[":id"]["$delete"]({
-        param: { id },
+      if (!id) throw new Error("Category ID is required.");
+
+      const res = await fetch(`/api/categories/${encodeURIComponent(id)}`, {
+        method: "DELETE",
       });
 
-      return await response.json();
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`Failed to delete category: ${text}`);
+      }
+
+      return res.json();
     },
     onSuccess: () => {
       toast.success("Category deleted.");
@@ -26,8 +26,8 @@ export const useDeleteCategory = (id?: string) => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       queryClient.invalidateQueries({ queryKey: ["summary"] });
     },
-    onError: () => {
-      toast.error("Failed to delete category.");
+    onError: (error: any) => {
+      toast.error(error?.message || "Failed to delete category.");
     },
   });
 

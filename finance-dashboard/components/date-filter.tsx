@@ -1,11 +1,10 @@
-
 "use client";
 
 import { format, subDays } from "date-fns";
 import { ChevronDown } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import qs from "query-string";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { type DateRange } from "react-day-picker";
 
 import { Button } from "@/components/ui/button";
@@ -23,6 +22,9 @@ export const DateFilter = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  const [mounted, setMounted] = useState(false);
+
+  // Always call hooks first
   const accountId = searchParams.get("accountId");
   const from = searchParams.get("from") || "";
   const to = searchParams.get("to") || "";
@@ -45,10 +47,7 @@ export const DateFilter = () => {
     };
 
     const url = qs.stringifyUrl(
-      {
-        url: pathname,
-        query,
-      },
+      { url: pathname, query },
       { skipEmptyString: true, skipNull: true }
     );
 
@@ -60,6 +59,17 @@ export const DateFilter = () => {
     pushToUrl(undefined);
   };
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Only conditionally render JSX, never hooks
+  const buttonContent = mounted ? (
+    <span>{formatDateRange(paramState)}</span>
+  ) : (
+    <span className="opacity-0">loading...</span>
+  );
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -69,8 +79,7 @@ export const DateFilter = () => {
           variant="outline"
           className="h-9 w-full rounded-md border-none bg-white/10 px-3 font-normal text-white outline-none transition hover:bg-white/30 hover:text-white focus:bg-white/30 focus:ring-transparent focus:ring-offset-0 lg:w-auto"
         >
-          <span>{formatDateRange(paramState)}</span>
-
+          {buttonContent}
           <ChevronDown className="ml-2 size-4 opacity-50" />
         </Button>
       </PopoverTrigger>

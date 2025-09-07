@@ -8,7 +8,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { insertCategorySchema } from "@/db/schema";
-import { useCreateCategory } from "@/features/categories/api/use-create-category";
+import  useCreateCategory  from "@/features/categories/api/use-create-category";
 import { useNewCategory } from "@/features/categories/hooks/use-new-category";
 
 import { CategoryForm } from "./category-form";

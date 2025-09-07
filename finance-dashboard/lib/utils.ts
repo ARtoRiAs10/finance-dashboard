@@ -71,6 +71,8 @@ export function formatDateRange(period?: Period) {
   const defaultTo = new Date();
   const defaultFrom = subDays(defaultTo, 30);
 
+  const fromDate = period?.from ? new Date(period.from) : defaultFrom;
+  const toDate = period?.to ? new Date(period.to) : defaultTo;
   if (!period?.from) {
     return `${format(defaultFrom, "LLL dd")} - ${format(
       defaultTo,

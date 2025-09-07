@@ -11,7 +11,7 @@ import {
 import { insertTransactionSchema } from "@/db/schema";
 import { useCreateAccount } from "@/features/accounts/api/use-create-account";
 import { useGetAccounts } from "@/features/accounts/api/use-get-accounts";
-import { useCreateCategory } from "@/features/categories/api/use-create-category";
+import useCreateCategory from "@/features/categories/api/use-create-category";
 import { useGetCategories } from "@/features/categories/api/use-get-categories";
 import { useCreateTransaction } from "@/features/transactions/api/use-create-transaction";
 import { useNewTransaction } from "@/features/transactions/hooks/use-new-transaction";
@@ -28,14 +28,14 @@ export const NewTransactionSheet = () => {
   const createMutation = useCreateTransaction();
   const categoryMutation = useCreateCategory();
   const categoryQuery = useGetCategories();
-  const categoryOptions = (categoryQuery.data ?? []).map((category) => ({
+  const categoryOptions = (categoryQuery.data ?? []).map((category: any) => ({
     label: category.name,
     value: category.id,
   }));
 
   const accountMutation = useCreateAccount();
   const accountQuery = useGetAccounts();
-  const accountOptions = (accountQuery.data ?? []).map((account) => ({
+  const accountOptions = (accountQuery.data ?? []).map((account: any) => ({
     label: account.name,
     value: account.id,
   }));
@@ -50,7 +50,15 @@ export const NewTransactionSheet = () => {
   const isLoading = categoryQuery.isLoading || accountQuery.isLoading;
 
   const onSubmit = (values: FormValues) => {
-    createMutation.mutate(values, {
+    // Map form values to API expected values
+    const payload = {
+      ...values,
+      date: values.date.toISOString(), // API expects string
+      note: values.notes ?? undefined, // map notes -> note
+      categoryId: values.categoryId ?? "", // ensure string
+    };
+
+    createMutation.mutate(payload, {
       onSuccess: () => {
         onClose();
       },
@@ -62,7 +70,6 @@ export const NewTransactionSheet = () => {
       <SheetContent className="space-y-4">
         <SheetHeader>
           <SheetTitle>New Transaction</SheetTitle>
-
           <SheetDescription>Add a new transaction.</SheetDescription>
         </SheetHeader>
 

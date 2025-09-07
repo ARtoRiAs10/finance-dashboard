@@ -1,3 +1,5 @@
+"use client";
+
 import { ClerkLoaded, ClerkLoading, UserButton } from "@clerk/nextjs";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
@@ -21,6 +23,7 @@ export const Header = () => {
           </div>
 
           <div className="flex items-center gap-x-2">
+            {/* Clerk user UI */}
             <ClerkLoaded>
               <UserButton afterSignOutUrl="/" />
             </ClerkLoaded>

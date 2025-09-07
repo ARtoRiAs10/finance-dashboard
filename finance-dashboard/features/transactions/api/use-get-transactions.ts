@@ -13,19 +13,13 @@ export const useGetTransactions = () => {
   const query = useQuery({
     queryKey: ["transactions", { from, to, accountId }],
     queryFn: async () => {
-      const response = await client.api.transactions.$get({
-        query: {
-          from,
-          to,
-          accountId,
-        },
-      });
+      const response = await fetch(`/api/transactions?from=${from}&to=${to}&accountId=${accountId}`);
 
       if (!response.ok) throw new Error("Failed to fetch transactions.");
 
       const { data } = await response.json();
 
-      return data.map((transaction) => ({
+      return data.map((transaction:any) => ({
         ...transaction,
         amount: convertAmountFromMilliunits(transaction.amount),
       }));

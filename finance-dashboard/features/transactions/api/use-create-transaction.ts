@@ -1,29 +1,47 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { InferRequestType, InferResponseType } from "hono";
 import { toast } from "sonner";
-
-import { client } from "@/lib/hono";
-
-type ResponseType = InferResponseType<typeof client.api.transactions.$post>;
-type RequestType = InferRequestType<
-  typeof client.api.transactions.$post
->["json"];
 
 export const useCreateTransaction = () => {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation<ResponseType, Error, RequestType>({
-    mutationFn: async (json) => {
-      const response = await client.api.transactions.$post({ json });
+  const mutation = useMutation({
+    mutationFn: async (json: {
+      accountId: string;
+      amount: number;
+      categoryId: string;
+      date: string;
+      note?: string;
+    }) => {
+      const response = await fetch("/api/transactions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(json),
+      });
 
-      return await response.json();
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`Failed to create transaction: ${text}`);
+      }
+
+      return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       toast.success("Transaction created.");
-      queryClient.invalidateQueries({ queryKey: ["transactions"] });
-      queryClient.invalidateQueries({ queryKey: ["summary"] });
+
+      // Invalidate all transactions queries
+      queryClient.invalidateQueries({queryKey : ["transactions"]});
+
+      // Invalidate all summary queries
+      // This ensures the overview updates even if `accountId` or dates change
+      queryClient.invalidateQueries({queryKey :["summary"]});
+
+      // Optionally, invalidate categories if summary depends on them
+      queryClient.invalidateQueries({queryKey :["categories"]});
     },
-    onError: () => {
+    onError: (error: any) => {
+      console.error("Create transaction error:", error);
       toast.error("Failed to create transaction.");
     },
   });
