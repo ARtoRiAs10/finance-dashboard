@@ -17,12 +17,17 @@ const app = new Hono().basePath("/api");
 app.use(
   "*",
   cors({
-    origin: "*", // <-- sets Access-Control-Allow-Origin: *
+    origin: [
+      "http://localhost:3000",
+      "https://finance-dashboard-ygyi-l6xzaogap.vercel.app", // ✅ your frontend
+      "https://finance-dashboard-backend.vercel.app",
+    ],
     allowHeaders: ["Content-Type", "Authorization"],
     allowMethods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
-    credentials: false, // must be false if origin: "*" (browser blocks otherwise)
+    credentials: true,
   })
 );
+
 
 // Apply Clerk middleware
 app.use("*", clerkMiddleware());
