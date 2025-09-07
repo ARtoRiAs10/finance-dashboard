@@ -14,19 +14,18 @@ export const runtime = "nodejs";
 const app = new Hono().basePath("/api");
 
 // ✅ CORS middleware: allow all origins
-app.use(
-  "*",
-  cors({
-    origin: [
-      "http://localhost:3000",
-      "https://finance-dashboard-ygyi-l6xzaogap.vercel.app", // ✅ your frontend
-      "https://finance-dashboard-backend.vercel.app",
-    ],
-    allowHeaders: ["Content-Type", "Authorization"],
-    allowMethods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
-    credentials: true,
-  })
-);
+app.use("*", cors({
+  origin: (origin) => {
+    if (!origin) return "*"; // server-to-server calls
+    if (origin.endsWith(".vercel.app")) return origin; // allow any vercel frontend
+    if (origin === "http://localhost:3000") return origin; // local dev
+    return null; // block others
+  },
+  allowHeaders: ["Content-Type", "Authorization"],
+  allowMethods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+  credentials: true,
+}));
+
 
 
 // Apply Clerk middleware
