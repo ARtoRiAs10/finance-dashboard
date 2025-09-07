@@ -13,19 +13,16 @@ export const runtime = "nodejs";
 
 const app = new Hono().basePath("/api");
 
-// Add CORS middleware for Codespaces
-app.use("*", cors({
-  origin: [
-    "http://localhost:3000",
-    "https://*.app.github.dev", // Allow all Codespace URLs
-    "https://finance-dashboard-backend.vercel.app", // backend
-    "https://finance-dashboard-ygyi.vercel.app",
-    process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
-  ],
-  allowHeaders: ["Content-Type", "Authorization"],
-  allowMethods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
-  credentials: true,
-}));
+// ✅ CORS middleware: allow all origins
+app.use(
+  "*",
+  cors({
+    origin: "*", // <-- sets Access-Control-Allow-Origin: *
+    allowHeaders: ["Content-Type", "Authorization"],
+    allowMethods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+    credentials: false, // must be false if origin: "*" (browser blocks otherwise)
+  })
+);
 
 // Apply Clerk middleware
 app.use("*", clerkMiddleware());
